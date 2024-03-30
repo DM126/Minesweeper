@@ -127,6 +127,7 @@ public class MinesweeperPanel extends JPanel
 		{
 			if (!gameOver) 
 			{
+				//x and y coordinates within the board grid. (0,0) is the top left.
 				int x = event.getX() / IMAGE_SIZE;
 				int y = event.getY() / IMAGE_SIZE;
 				
