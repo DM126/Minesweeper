@@ -43,15 +43,10 @@ public class Board
 	
 	public void click(int x, int y) 
 	{
-		//TODO: Should left-clicking a flagged tile unflag it?
-		if (!tiles[x][y].isFlagged()) 
+		Tile tile = tiles[x][y];
+		if (!tile.isFlagged() && !tile.isMine())
 		{
-			tiles[x][y].uncover();
-			
-			if (!tiles[x][y].isMine())
-			{
-				uncoverRegion(x, y);
-			}
+			uncoverRegion(x, y);
 		}
 	}
 	
@@ -63,40 +58,26 @@ public class Board
 	 */
 	public void uncoverRegion(int x, int y) 
 	{
-		if (tiles[x][y].isVisible())
-		{
+		if (x < 0 || x >= width || y < 0 || y >= height) {
 			return;
 		}
 		
-		if (tiles[x][y].adjMines() == 0)
-		{
-			if (tiles[x][y+1].isFlagged())
-			{
-				
-			}
+		Tile tile = tiles[x][y];
+		if (tile.isVisible()) {
+			return;
 		}
 		
-		
-		
-		if (tiles[x][y].adjMines() == 0) 
-		{
-			for (int y2 = y - 1; y2 <= y + 1; y2++) 
-			{
-				if (y2 >= 0 && y2 < height) 
-				{
-					for (int x2 = x - 1; x2 <= x + 1; x2++) 
-					{
-						if (x2 >= 0 && x2 < width) 
-						{
-							if (!tiles[x2][y2].isVisible() && !tiles[x][y].equals(tiles[x2][y2]) && !tiles[x2][y2].isFlagged()) 
-							{
-								tiles[x2][y2].uncover();
-							}
-						}
-					}
-				}
-			}
-		}
+		tile.uncover();
+		if (tile.adjMines() == 0) {
+			uncoverRegion(x+1, y);
+			uncoverRegion(x-1, y);
+			uncoverRegion(x, y-1);
+			uncoverRegion(x, y+1);
+			uncoverRegion(x+1, y+1);
+			uncoverRegion(x-1, y+1);
+			uncoverRegion(x+1, y-1);
+			uncoverRegion(x-1, y-1);
+		}	
 	}
 	
 	/**
@@ -107,15 +88,20 @@ public class Board
 	 */
 	public void flag(int x, int y) 
 	{
-		if (flags > 0 && !tiles[x][y].isVisible()) 
+		Tile tile = tiles[x][y];
+		if (!tile.isVisible()) 
 		{
-			tiles[x][y].flagTile();
-			if (tiles[x][y].isFlagged())
+			if (!tile.isFlagged()) 
 			{
-				flags--;
-			}
-			else
+				if (flags > 0)
+				{
+					tile.flagTile();
+					flags--;
+				}
+			} 
+			else if (flags < mines)
 			{
+				tile.flagTile();
 				flags++;
 			}
 		}
