@@ -95,7 +95,7 @@ public class MinesweeperPanel extends JPanel
 		{
 			for (int x = 0; x < width; x++) 
 			{
-				images[x][y].paintIcon(this, page, 32 * x, 32 * y);
+				images[x][y].paintIcon(this, page, IMAGE_SIZE * x, IMAGE_SIZE * y);
 			}
 		}
 	}
@@ -123,27 +123,38 @@ public class MinesweeperPanel extends JPanel
 	
 	private class ClickListener implements MouseListener 
 	{
-		public void mousePressed(MouseEvent event) 
+		public void mouseClicked(MouseEvent event) 
 		{
 			if (!gameOver) 
 			{
 				//x and y coordinates within the board grid. (0,0) is the top left.
 				int x = event.getX() / IMAGE_SIZE;
 				int y = event.getY() / IMAGE_SIZE;
+				if (!board.inBounds(x, y))
+				{
+					return;
+				}
 				
-				//TODO: Refactor into leftMouseClick(x, y) and rightMouseClick(x, y)???
 				if (SwingUtilities.isLeftMouseButton(event)) 
 				{
-					board.click(x, y);
-					if (board.getTile(x, y).isMine() && !board.getTile(x, y).isFlagged()) 
+					if (event.getClickCount() == 2) 
 					{
-						gameOver = true;
-						board.gameOver();
+						//TODO implement double click fill
+						System.out.println("double");
 					}
-					else if (checkWin()) 
+					else 
 					{
-						gameOver = true;
-						System.out.println("Congrats"); //TODO: Display a dialog box
+						board.click(x, y);
+						if (board.getTile(x, y).isMine() && !board.getTile(x, y).isFlagged()) 
+						{
+							gameOver = true;
+							board.gameOver();
+						}
+						else if (checkWin()) 
+						{
+							gameOver = true;
+							System.out.println("Congrats"); //TODO: Display a dialog box
+						}
 					}
 				}
 				else if (SwingUtilities.isRightMouseButton(event))
@@ -165,14 +176,13 @@ public class MinesweeperPanel extends JPanel
 					images[col][row] = setImage(board.getTile(col, row));
 				}
 			}
-			//images[x][y] = setImage(board.getTile(x, y)); 	//what is this?
 			
 			repaint();
 		}
 		
 		public void mouseEntered(MouseEvent event) {}
 		public void mouseExited(MouseEvent event) {}
-		public void mouseClicked(MouseEvent event) {}
+		public void mousePressed(MouseEvent event) {}
 		public void mouseReleased(MouseEvent event) {}
 	}
 }

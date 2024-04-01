@@ -58,7 +58,7 @@ public class Board
 	 */
 	public void uncoverRegion(int x, int y) 
 	{
-		if (x < 0 || x >= width || y < 0 || y >= height) {
+		if (!inBounds(x, y)) {
 			return;
 		}
 		
@@ -200,5 +200,14 @@ public class Board
 		}
 		
 		tiles[thisX][thisY].setAdjMines(adjMines);
+	}
+	
+	/**
+	 * @param x the column
+	 * @param y the row
+	 * @return true if x and y are within the board bounds
+	 */
+	public boolean inBounds(int x, int y) {
+		return x > 0 && x < width && y > 0 && y < height;
 	}
 }
