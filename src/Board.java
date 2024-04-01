@@ -63,7 +63,7 @@ public class Board
 		}
 		
 		Tile tile = tiles[x][y];
-		if (tile.isVisible()) {
+		if (tile.isVisible() || tile.isFlagged()) {
 			return;
 		}
 		
