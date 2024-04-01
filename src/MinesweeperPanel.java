@@ -4,8 +4,6 @@ import javax.swing.*;
 
 public class MinesweeperPanel extends JPanel 
 {
-	private int width;
-	private int height;
 	private Board board;
 	private ImageIcon[][] images;
 	private static final int IMAGE_SIZE = 32; //pixel size of a tile?
@@ -22,10 +20,8 @@ public class MinesweeperPanel extends JPanel
 	public MinesweeperPanel() 
 	{
 		gameOver = false;
-		width = 8;
-		height = 8;
-		board = new Board(width, height); //eventually allow for custom boards and number of mines.
-		images = new ImageIcon[width][height];
+		board = new Board(8, 8); //eventually allow for custom boards and number of mines.
+		images = new ImageIcon[board.getWidth()][board.getHeight()];
 		
 		String imageFolder = "resources/";
 		numbers = new ImageIcon[] { new ImageIcon(imageFolder + "0.png"),
@@ -43,9 +39,9 @@ public class MinesweeperPanel extends JPanel
 		mine = new ImageIcon(imageFolder + "mine.png");
 		
 		//initialize all images to covered at first.
-		for (int y = 0; y < height; y++) 
+		for (int y = 0; y < board.getHeight(); y++) 
 		{
-			for (int x = 0; x < width; x++) 
+			for (int x = 0; x < board.getWidth(); x++) 
 			{
 				images[x][y] = setImage(board.getTile(x, y));
 			}
@@ -53,7 +49,7 @@ public class MinesweeperPanel extends JPanel
 		
 		addMouseListener(new ClickListener());
 		
-		setPreferredSize(new Dimension(width * IMAGE_SIZE, height * IMAGE_SIZE));
+		setPreferredSize(new Dimension(board.getWidth() * IMAGE_SIZE, board.getHeight() * IMAGE_SIZE));
 		setFocusable(true);
 	}
 	
@@ -91,9 +87,9 @@ public class MinesweeperPanel extends JPanel
 	{
 		super.paintComponent(page);
 		
-		for (int y = 0; y < height; y++) 
+		for (int y = 0; y < board.getHeight(); y++) 
 		{
-			for (int x = 0; x < width; x++) 
+			for (int x = 0; x < board.getWidth(); x++) 
 			{
 				images[x][y].paintIcon(this, page, IMAGE_SIZE * x, IMAGE_SIZE * y);
 			}
@@ -107,9 +103,9 @@ public class MinesweeperPanel extends JPanel
 	 */
 	private boolean checkWin() 
 	{
-		for (int y = 0; y < height; y++) 
+		for (int y = 0; y < board.getHeight(); y++) 
 		{
-			for (int x = 0; x < width; x++) 
+			for (int x = 0; x < board.getWidth(); x++) 
 			{
 				if (!board.getTile(x, y).isVisible() && !board.getTile(x, y).isFlagged())
 				{
@@ -169,9 +165,9 @@ public class MinesweeperPanel extends JPanel
 			}
 			
 			//TODO: INEFFICIENT!!! ONLY CHANGE TILES THAT WERE ALTERED!
-			for (int col = 0; col < width; col++) 
+			for (int col = 0; col < board.getWidth(); col++) 
 			{
-				for (int row = 0; row < height; row++) 
+				for (int row = 0; row < board.getHeight(); row++) 
 				{
 					images[col][row] = setImage(board.getTile(col, row));
 				}
