@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class BoardPanel extends JPanel 
 {
 	private Board board;
@@ -49,6 +50,11 @@ public class BoardPanel extends JPanel
 		
 		setPreferredSize(new Dimension(board.getWidth() * IMAGE_SIZE, board.getHeight() * IMAGE_SIZE));
 		setFocusable(true);
+	}
+	
+	public Board getBoard()
+	{
+		return board;
 	}
 	
 	/**
