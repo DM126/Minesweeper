@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class MinesweeperPanel extends JPanel 
+public class BoardPanel extends JPanel 
 {
 	private Board board;
 	private ImageIcon[][] images;
@@ -16,7 +16,7 @@ public class MinesweeperPanel extends JPanel
 	
 	//TODO: add a timer, mines cleared, etc.
 	
-	public MinesweeperPanel() 
+	public BoardPanel() 
 	{
 		board = new Board(8, 8); //eventually allow for custom boards and number of mines.
 		images = new ImageIcon[board.getWidth()][board.getHeight()];

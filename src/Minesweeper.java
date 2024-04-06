@@ -7,7 +7,7 @@ public class Minesweeper
 		JFrame frame = new JFrame("Minesweeper");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.getContentPane().add(new MinesweeperPanel());
+		frame.getContentPane().add(new BoardPanel());
 		
 		frame.pack();
 		frame.setVisible(true);
