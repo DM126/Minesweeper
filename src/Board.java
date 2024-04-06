@@ -58,26 +58,38 @@ public class Board
 	 */
 	public void uncoverRegion(int x, int y) 
 	{
-		if (!inBounds(x, y)) {
+		if (!inBounds(x, y)) 
+		{
 			return;
 		}
 		
 		Tile tile = tiles[x][y];
-		if (tile.isVisible() || tile.isFlagged()) {
+		if (tile.isVisible() || tile.isFlagged()) 
+		{
 			return;
 		}
 		
 		tile.uncover();
-		if (tile.adjMines() == 0) {
-			uncoverRegion(x+1, y);
-			uncoverRegion(x-1, y);
-			uncoverRegion(x, y-1);
-			uncoverRegion(x, y+1);
-			uncoverRegion(x+1, y+1);
-			uncoverRegion(x-1, y+1);
-			uncoverRegion(x+1, y-1);
-			uncoverRegion(x-1, y-1);
-		}	
+		if (tile.adjMines() == 0) 
+		{
+			floodFillAdjacentTiles(x, y);
+		}
+	}
+	
+	/**
+	 * calls uncoverRegion() for each tile in a 3x3 square around x,y (excluding x,y)
+	 * @param x the column of the tile to uncover adjacent tiles
+	 * @param y the row of the tile to uncover adjacent tiles
+	 */
+	public void floodFillAdjacentTiles(int x, int y) {
+		uncoverRegion(x+1, y);
+		uncoverRegion(x-1, y);
+		uncoverRegion(x, y-1);
+		uncoverRegion(x, y+1);
+		uncoverRegion(x+1, y+1);
+		uncoverRegion(x-1, y+1);
+		uncoverRegion(x+1, y-1);
+		uncoverRegion(x-1, y-1);
 	}
 	
 	/**
@@ -203,11 +215,38 @@ public class Board
 	}
 	
 	/**
+	 * @param x the column of the tile
+	 * @param y the row of the tile
+	 * @return the number of flags around the tile
+	 */
+	public int adjFlags(int x, int y)
+	{
+		int adjFlags = 0;
+		for (int col = x - 1; col <= x + 1; col++)
+		{
+			for (int row = y - 1; row <= y + 1; row++)
+			{
+				if (!(col == x && row == y) && inBounds(col, row))
+				{
+					Tile adjTile = this.getTile(col, row);
+					if (adjTile.isFlagged())
+					{
+						adjFlags++;
+					}
+				}
+			}
+		}
+		
+		return adjFlags;
+	}
+	
+	/**
 	 * @param x the column
 	 * @param y the row
 	 * @return true if x and y are within the board bounds
 	 */
-	public boolean inBounds(int x, int y) {
+	public boolean inBounds(int x, int y) 
+	{
 		return x >= 0 && x < width && y >= 0 && y < height;
 	}
 	
