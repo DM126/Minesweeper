@@ -8,6 +8,7 @@ public class Board
 	private int flags;
 	private Tile[][] tiles;
 	private Random rand;
+	private boolean gameOver;
 	
 	public Board(int width, int height) 
 	{
@@ -15,9 +16,7 @@ public class Board
 		this.height = height;
 		rand = new Random();
 		
-		mines = 10;
-		flags = mines;
-		setBoard();
+		newGame();
 	}
 	
 	private void setBoard() 
@@ -70,6 +69,10 @@ public class Board
 		}
 		
 		tile.uncover();
+		if (tile.isMine())
+		{
+			gameOver();
+		}
 		if (tile.adjMines() == 0) 
 		{
 			floodFillAdjacentTiles(x, y);
@@ -81,7 +84,8 @@ public class Board
 	 * @param x the column of the tile to uncover adjacent tiles
 	 * @param y the row of the tile to uncover adjacent tiles
 	 */
-	public void floodFillAdjacentTiles(int x, int y) {
+	public void floodFillAdjacentTiles(int x, int y) 
+	{
 		uncoverRegion(x+1, y);
 		uncoverRegion(x-1, y);
 		uncoverRegion(x, y-1);
@@ -137,13 +141,38 @@ public class Board
 				}
 			}
 		}
+		gameOver = true;
+	}
+	
+	/**
+	 * Checks if the win condition is satisfied.
+	 * 
+	 * @return true if the player has won the game
+	 */
+	public boolean checkWin() 
+	{
+		for (int y = 0; y < height; y++) 
+		{
+			for (int x = 0; x < width; x++) 
+			{
+				Tile tile = getTile(x, y);
+				if (!tile.isVisible() && !tile.isFlagged())
+				{
+					return false;
+				}
+			}
+		}
+		
+		gameOver = true;
+		return true;
 	}
 	
 	/**
 	 * Resets the board and starts a new game.
 	 */
-	public void reset() 
+	public void newGame() 
 	{
+		gameOver = false;
 		mines = 10;
 		flags = mines;
 		setBoard();
@@ -258,5 +287,10 @@ public class Board
 	public int getHeight()
 	{
 		return height;
+	}
+	
+	public boolean isGameOver() 
+	{
+		return gameOver;
 	}
 }

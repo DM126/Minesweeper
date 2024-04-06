@@ -7,7 +7,6 @@ public class MinesweeperPanel extends JPanel
 	private Board board;
 	private ImageIcon[][] images;
 	private static final int IMAGE_SIZE = 32; //pixel size of a tile?
-	private boolean gameOver;
 	
 	//Tile images
 	private ImageIcon[] numbers; //Shows number of mines in adjacent tiles (0 to 8)
@@ -19,7 +18,6 @@ public class MinesweeperPanel extends JPanel
 	
 	public MinesweeperPanel() 
 	{
-		gameOver = false;
 		board = new Board(8, 8); //eventually allow for custom boards and number of mines.
 		images = new ImageIcon[board.getWidth()][board.getHeight()];
 		
@@ -96,32 +94,11 @@ public class MinesweeperPanel extends JPanel
 		}
 	}
 	
-	/**
-	 * Checks if the win condition is satisfied.
-	 * 
-	 * @return true if the player has won the game
-	 */
-	private boolean checkWin() 
-	{
-		for (int y = 0; y < board.getHeight(); y++) 
-		{
-			for (int x = 0; x < board.getWidth(); x++) 
-			{
-				if (!board.getTile(x, y).isVisible() && !board.getTile(x, y).isFlagged())
-				{
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
 	private class ClickListener implements MouseListener 
 	{
 		public void mouseClicked(MouseEvent event) 
 		{
-			if (!gameOver) 
+			if (!board.isGameOver()) 
 			{
 				//x and y coordinates within the board grid. (0,0) is the top left.
 				int x = event.getX() / IMAGE_SIZE;
@@ -144,12 +121,10 @@ public class MinesweeperPanel extends JPanel
 					board.click(x, y);
 					if (tile.isMine() && !tile.isFlagged()) 
 					{
-						gameOver = true;
 						board.gameOver();
 					}
-					else if (checkWin()) 
+					else if (board.checkWin()) 
 					{
-						gameOver = true;
 						System.out.println("Congrats"); //TODO: Display a dialog box
 					}
 				}
@@ -160,8 +135,7 @@ public class MinesweeperPanel extends JPanel
 			}
 			else //click the board to reset after a game over
 			{
-				gameOver = false;
-				board.reset();
+				board.newGame();
 			}
 			
 			//TODO: INEFFICIENT!!! ONLY CHANGE TILES THAT WERE ALTERED!
