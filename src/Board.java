@@ -10,15 +10,26 @@ public class Board
 	private Random rand;
 	private boolean gameOver;
 	
-	public Board(int width, int height) 
+	/**
+	 * Creates a minesweeper board.
+	 * 
+	 * @param width the number of tiles wide the board is
+	 * @param height the number of tiles tall the board is
+	 * @param mines the number of mines on the board
+	 */
+	public Board(int width, int height, int mines) 
 	{
 		this.width = width;
 		this.height = height;
 		rand = new Random();
 		
+		this.mines = mines;
 		newGame();
 	}
 	
+	/**
+	 * Creates the tiles and places the mines
+	 */
 	private void setBoard() 
 	{
 		tiles = new Tile[width][height];
@@ -169,11 +180,12 @@ public class Board
 	
 	/**
 	 * Resets the board and starts a new game.
+	 * 
+	 * @param startingMines the number of mines to place
 	 */
 	public void newGame() 
 	{
 		gameOver = false;
-		mines = 10;
 		flags = mines;
 		setBoard();
 	}

@@ -17,9 +17,16 @@ public class BoardPanel extends JPanel
 	
 	//TODO: add a timer, mines cleared, etc.
 	
-	public BoardPanel() 
+	/**
+	 * Creates a panel to display the minesweeper board.
+	 * 
+	 * @param boardWidth the number of tiles wide the board is
+	 * @param boardHeight the number of tiles tall the board is
+	 * @param mines the number of mines on the board
+	 */
+	public BoardPanel(int boardWidth, int boardHeight, int mines) 
 	{
-		board = new Board(8, 8); //eventually allow for custom boards and number of mines.
+		board = new Board(boardWidth, boardHeight, mines); //eventually allow for custom boards and number of mines.
 		images = new ImageIcon[board.getWidth()][board.getHeight()];
 		
 		String imageFolder = "resources/";

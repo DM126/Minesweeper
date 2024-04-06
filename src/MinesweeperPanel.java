@@ -11,8 +11,9 @@ public class MinesweeperPanel extends JPanel
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		boardPanel = new BoardPanel();
-		headerPanel = new HeaderPanel(boardPanel.getWidth(), 10);
+		int mines = 10;
+		boardPanel = new BoardPanel(8, 8, mines);
+		headerPanel = new HeaderPanel(boardPanel.getWidth(), mines);
 		
 		add(headerPanel);
 		add(boardPanel);
