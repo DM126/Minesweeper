@@ -34,7 +34,8 @@ public class MinesweeperPanel extends JPanel
 			{
 				case "flags": 
 				{
-					headerPanel.setMineCount((Integer)event.getNewValue()); break;
+					headerPanel.setFlagCount((Integer)event.getNewValue());
+					break;
 				}
 				case "gameOver":
 				{

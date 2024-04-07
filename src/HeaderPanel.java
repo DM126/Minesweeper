@@ -9,7 +9,7 @@ import javax.swing.Timer;
 public class HeaderPanel extends JPanel
 {
 	private static final int MAX_SECONDS = 999; //max seconds to show on the timer
-	private JLabel mineCountLabel;
+	private JLabel flagCountLabel;
 	private JLabel timerLabel;
 	private Timer timer;
 	private int timeElapsed;
@@ -21,23 +21,23 @@ public class HeaderPanel extends JPanel
 	 * Creates a header panel with an unflagged mine count and timer
 	 * 
 	 * @param width the width of the JPanel
-	 * @param startingMineCount the number of mines on the board
+	 * @param startingFlagCount the number of flags (mines) on the board
 	 */
-	public HeaderPanel(int width, int startingMineCount)
+	public HeaderPanel(int width, int startingFlagCount)
 	{
 		setLayout(new BorderLayout());
 		
-		mineCountLabel = new JLabel();
+		flagCountLabel = new JLabel();
 		timerLabel = new JLabel();
 		timer = new Timer(ONE_SECOND, event -> incrementTimer());
 		
-		add(mineCountLabel, BorderLayout.WEST);
+		add(flagCountLabel, BorderLayout.WEST);
 		add(timerLabel, BorderLayout.EAST);
 		
 		setPreferredSize(new Dimension(width, 25));
 		setFocusable(true);
 		
-		reset(startingMineCount);
+		reset(startingFlagCount);
 	}
 	
 	/**
@@ -45,9 +45,9 @@ public class HeaderPanel extends JPanel
 	 * 
 	 * @param mineCount the number of unflagged mines.
 	 */
-	public void setMineCount(int mineCount)
+	public void setFlagCount(int mineCount)
 	{
-		setLabel(mineCountLabel, mineCount);
+		setLabel(flagCountLabel, mineCount);
 	}
 	
 	/**
@@ -108,7 +108,7 @@ public class HeaderPanel extends JPanel
 	 */
 	public void reset(int mines)
 	{
-		setMineCount(mines);
+		setFlagCount(mines);
 		timeElapsed = 0;
 		setTimer(timeElapsed);
 		timer.restart();
