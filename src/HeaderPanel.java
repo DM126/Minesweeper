@@ -94,6 +94,14 @@ public class HeaderPanel extends JPanel
 	}
 	
 	/**
+	 * Stops the timer.
+	 */
+	public void stopTimer()
+	{
+		timer.stop();
+	}
+	
+	/**
 	 * resets the counters
 	 * 
 	 * @param mines the number of mines on the board
@@ -101,7 +109,7 @@ public class HeaderPanel extends JPanel
 	public void reset(int mines)
 	{
 		setMineCount(mines);
-		timeElapsed = 990;
+		timeElapsed = 0;
 		setTimer(timeElapsed);
 		timer.restart();
 	}

@@ -128,10 +128,12 @@ public class BoardPanel extends JPanel
 		if (tile.isMine() && !tile.isFlagged()) 
 		{
 			board.gameOver();
+			this.firePropertyChange("gameOver", false, true);
 		}
 		else if (board.checkWin()) 
 		{
 			System.out.println("You win"); //TODO: Display a dialog box
+			this.firePropertyChange("gameOver", false, true);
 		}
 	}
 	
@@ -144,12 +146,18 @@ public class BoardPanel extends JPanel
 	private void rightClickTile(int x, int y)
 	{
 		//TODO implement question marks
+		int oldFlagCount = board.getFlags();
 		board.flag(x, y);
+		if (oldFlagCount != board.getFlags())
+		{
+			this.firePropertyChange("flags", oldFlagCount, board.getFlags());
+		}
 	}
 	
 	private void newGame()
 	{
 		board.newGame();
+		this.firePropertyChange("gameOver", true, false);
 	}
 	
 	private class ClickListener implements MouseListener 

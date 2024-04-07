@@ -1,3 +1,6 @@
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
@@ -17,10 +20,36 @@ public class MinesweeperPanel extends JPanel
 		
 		add(headerPanel);
 		add(boardPanel);
+		
+		boardPanel.addPropertyChangeListener(new ChangeListener());
 	}
-	
-	public void reset()
+
+	private class ChangeListener implements PropertyChangeListener
 	{
-		System.out.println("reset");
+		@Override
+		public void propertyChange(PropertyChangeEvent event)
+		{
+			System.out.println(event);
+			switch (event.getPropertyName())
+			{
+				case "flags": 
+				{
+					headerPanel.setMineCount((Integer)event.getNewValue()); break;
+				}
+				case "gameOver":
+				{
+					if (Boolean.TRUE.equals(event.getNewValue())) //true, game ended
+					{
+						headerPanel.stopTimer();
+					}
+					else //false, new game started
+					{
+						headerPanel.reset(boardPanel.getBoard().getMines());
+					}
+					break;
+				}
+				default: break;
+			}
+		}
 	}
 }
