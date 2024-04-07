@@ -107,6 +107,51 @@ public class BoardPanel extends JPanel
 		}
 	}
 	
+	/**
+	 * Left click a tile.
+	 * 
+	 * @param x the column of the clicked tile
+	 * @param y the row of the clicked tile
+	 * @param clickCount the number of clicks
+	 */
+	private void leftClickTile(int x, int y, int clickCount)
+	{
+		Tile tile = board.getTile(x, y);
+		//double click number, do flood fill if all mines are flagged
+		if (clickCount == 2 && tile.isVisible() && tile.adjMines() > 0 && tile.adjMines() == board.adjFlags(x, y)) 
+		{
+			System.out.println("double click");
+			board.floodFillAdjacentTiles(x, y);
+		}
+		
+		board.click(x, y);
+		if (tile.isMine() && !tile.isFlagged()) 
+		{
+			board.gameOver();
+		}
+		else if (board.checkWin()) 
+		{
+			System.out.println("You win"); //TODO: Display a dialog box
+		}
+	}
+	
+	/**
+	 * Right click a tile.
+	 * 
+	 * @param x the column of the clicked tile
+	 * @param y the row of the clicked tile
+	 */
+	private void rightClickTile(int x, int y)
+	{
+		//TODO implement question marks
+		board.flag(x, y);
+	}
+	
+	private void newGame()
+	{
+		board.newGame();
+	}
+	
 	private class ClickListener implements MouseListener 
 	{
 		public void mouseClicked(MouseEvent event) 
@@ -123,35 +168,19 @@ public class BoardPanel extends JPanel
 				
 				if (SwingUtilities.isLeftMouseButton(event)) 
 				{
-					Tile tile = board.getTile(x, y);
-					//double click number, do flood fill if all mines are flagged
-					if (event.getClickCount() == 2 && tile.isVisible() && tile.adjMines() > 0 && tile.adjMines() == board.adjFlags(x, y)) 
-					{
-						System.out.println("double");
-						board.floodFillAdjacentTiles(x, y);
-					}
-					
-					board.click(x, y);
-					if (tile.isMine() && !tile.isFlagged()) 
-					{
-						board.gameOver();
-					}
-					else if (board.checkWin()) 
-					{
-						System.out.println("Congrats"); //TODO: Display a dialog box
-					}
+					leftClickTile(x, y, event.getClickCount());
 				}
 				else if (SwingUtilities.isRightMouseButton(event))
 				{
-					board.flag(x, y);
+					rightClickTile(x, y);
 				}
 			}
 			else //click the board to reset after a game over
 			{
-				board.newGame();
+				newGame();
 			}
 			
-			//TODO: INEFFICIENT!!! ONLY CHANGE TILES THAT WERE ALTERED!
+			//TODO: INEFFICIENT, ONLY CHANGE TILES THAT WERE ALTERED!
 			for (int col = 0; col < board.getWidth(); col++) 
 			{
 				for (int row = 0; row < board.getHeight(); row++) 

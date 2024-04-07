@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Board 
+public class Board
 {
 	private int width;
 	private int height;
@@ -291,18 +291,43 @@ public class Board
 		return x >= 0 && x < width && y >= 0 && y < height;
 	}
 	
+	/**
+	 * @return the number of columns on the board
+	 */
 	public int getWidth()
 	{
 		return width;
 	}
 	
+	/**
+	 * @return the number of rows on the board
+	 */
 	public int getHeight()
 	{
 		return height;
 	}
 	
+	/**
+	 * @return false if the game is in progress
+	 */
 	public boolean isGameOver() 
 	{
 		return gameOver;
+	}
+	
+	/**
+	 * @return the number of mines on the board (flagged or not)
+	 */
+	public int getMines()
+	{
+		return mines;
+	}
+	
+	/**
+	 * @return the number of available flags
+	 */
+	public int getFlags()
+	{
+		return flags;
 	}
 }
