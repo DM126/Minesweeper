@@ -167,7 +167,7 @@ public class Board
 			for (int x = 0; x < width; x++) 
 			{
 				Tile tile = getTile(x, y);
-				if (!tile.isVisible() && !tile.isFlagged())
+				if (!tile.isVisible() && !tile.isMine())
 				{
 					return false;
 				}
