@@ -145,7 +145,6 @@ public class BoardPanel extends JPanel
 	 */
 	private void rightClickTile(int x, int y)
 	{
-		//TODO implement question marks
 		int oldFlagCount = board.getFlags();
 		board.flag(x, y);
 		if (oldFlagCount != board.getFlags())
