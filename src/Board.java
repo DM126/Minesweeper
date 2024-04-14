@@ -51,7 +51,7 @@ public class Board
 		return tiles[x][y];
 	}
 	
-	public void click(int x, int y) 
+	public void leftClick(int x, int y) 
 	{
 		Tile tile = tiles[x][y];
 		if (!tile.isFlagged() && !tile.isMine())
@@ -74,7 +74,7 @@ public class Board
 		}
 		
 		Tile tile = tiles[x][y];
-		if (tile.isVisible() || tile.isFlagged()) 
+		if (!tile.isUncoverable()) 
 		{
 			return;
 		}
@@ -108,28 +108,28 @@ public class Board
 	}
 	
 	/**
-	 * Flags or unflags an uncovered tile.
+	 * Flags, unflags, or question marks an uncovered tile.
 	 * 
 	 * @param x the x coordinate of the tile to flag
 	 * @param y the y coordinate of the tile to flag
 	 */
-	public void flag(int x, int y) 
+	public void rightClick(int x, int y) 
 	{
 		Tile tile = tiles[x][y];
 		if (!tile.isVisible()) 
 		{
-			if (!tile.isFlagged()) 
+			//if tile is already flagged, get a flag back
+			if (tile.isFlagged())
 			{
-				if (flags > 0)
-				{
-					tile.flagTile();
-					flags--;
-				}
-			} 
-			else if (flags < mines)
-			{
-				tile.flagTile();
 				flags++;
+			}
+			
+			tile.rightClickTile();
+			
+			//if tile is flagged now, decement flag count
+			if (tile.isFlagged())
+			{
+				flags--;
 			}
 		}
 		
@@ -260,7 +260,7 @@ public class Board
 	 * @param y the row of the tile
 	 * @return the number of flags around the tile
 	 */
-	public int adjFlags(int x, int y)
+	public int adjacentFlags(int x, int y)
 	{
 		int adjFlags = 0;
 		for (int col = x - 1; col <= x + 1; col++)
@@ -279,6 +279,31 @@ public class Board
 		}
 		
 		return adjFlags;
+	}
+	
+	/**
+	 * @param x the column of the tile
+	 * @param y the row of the tile
+	 * @return true if there is a question mark around a tile.
+	 */
+	public boolean isQuestionMarkAdjacent(int x, int y)
+	{
+		for (int col = x - 1; col <= x + 1; col++)
+		{
+			for (int row = y - 1; row <= y + 1; row++)
+			{
+				if (!(col == x && row == y) && inBounds(col, row))
+				{
+					Tile adjTile = this.getTile(col, row);
+					if (adjTile.isQuestionMarked())
+					{
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

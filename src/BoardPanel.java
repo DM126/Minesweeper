@@ -14,8 +14,7 @@ public class BoardPanel extends JPanel
 	private ImageIcon covered; //Tile that hasn't been revealed
 	private ImageIcon flag; //Flagged tile
 	private ImageIcon mine; //Mine tile
-	
-	//TODO: add a timer, mines cleared, etc.
+	private ImageIcon question; //Question marked tile
 	
 	/**
 	 * Creates a panel to display the minesweeper board.
@@ -43,6 +42,7 @@ public class BoardPanel extends JPanel
 		covered = new ImageIcon(imageFolder + "covered.png");
 		flag = new ImageIcon(imageFolder + "flag.png");
 		mine = new ImageIcon(imageFolder + "mine.png");
+		question = new ImageIcon(imageFolder + "question.png");
 		
 		//initialize all images to covered at first.
 		for (int y = 0; y < board.getHeight(); y++) 
@@ -89,6 +89,10 @@ public class BoardPanel extends JPanel
 		{
 			image = flag;
 		}
+		else if (t.isQuestionMarked())
+		{
+			image = question;
+		}
 		
 		return image;
 	}
@@ -117,23 +121,28 @@ public class BoardPanel extends JPanel
 	private void leftClickTile(int x, int y, int clickCount)
 	{
 		Tile tile = board.getTile(x, y);
+		
 		//double click number, do flood fill if all mines are flagged
-		if (clickCount == 2 && tile.isVisible() && tile.adjMines() > 0 && tile.adjMines() == board.adjFlags(x, y)) 
+		if (clickCount == 2 && tile.isVisible() && tile.adjMines() > 0 && 
+			tile.adjMines() == board.adjacentFlags(x, y) && !board.isQuestionMarkAdjacent(x, y)) 
 		{
 			System.out.println("double click");
 			board.floodFillAdjacentTiles(x, y);
 		}
 		
-		board.click(x, y);
-		if (tile.isMine() && !tile.isFlagged()) 
+		if (tile.isUncoverable())
 		{
-			board.gameOver();
-			this.firePropertyChange("gameOver", false, true);
-		}
-		else if (board.checkWin()) 
-		{
-			System.out.println("You win"); //TODO: Display a dialog box
-			this.firePropertyChange("gameOver", false, true);
+			board.leftClick(x, y);
+			if (tile.isMine() && !tile.isFlagged()) 
+			{
+				board.gameOver();
+				this.firePropertyChange("gameOver", false, true);
+			}
+			else if (board.checkWin()) 
+			{
+				System.out.println("You win"); //TODO: Display a dialog box
+				this.firePropertyChange("gameOver", false, true);
+			}
 		}
 	}
 	
@@ -146,7 +155,8 @@ public class BoardPanel extends JPanel
 	private void rightClickTile(int x, int y)
 	{
 		int oldFlagCount = board.getFlags();
-		board.flag(x, y);
+		board.rightClick(x, y);
+		
 		if (oldFlagCount != board.getFlags())
 		{
 			this.firePropertyChange("flags", oldFlagCount, board.getFlags());

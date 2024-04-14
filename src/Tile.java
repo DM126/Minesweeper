@@ -30,9 +30,10 @@ public class Tile
 	}
 	
 	/**
-	 * Will add a flag to the tile if it is unflagged, otherwise will remove the flag.
+	 * If the tile is uncovered, add a flag. If the tile is already flagged,
+	 * add a question mark. If the tile has a question mark, remove the question mark.
 	 */
-	public void flagTile() 
+	public void rightClickTile() 
 	{
 		if (!isVisible())
 		{
@@ -80,6 +81,16 @@ public class Tile
 	public boolean isFlagged()
 	{
 		return tileType == TileType.FLAG;
+	}
+	
+	public boolean isQuestionMarked()
+	{
+		return tileType == TileType.QUESTION_MARK;
+	}
+	
+	public boolean isUncoverable()
+	{
+		return tileType == TileType.COVERED;
 	}
 	
 	/**
